@@ -1,0 +1,33 @@
+blueprint:
+  name: Time Based Light Intensity
+  description: Don't turn on the lights on full power in the middle of the night..
+  domain: automation
+  source_url: https://github.com/koter84/HomeAssistant_Blueprints/blob/main/time_based_light_intensity.yaml
+  input:
+    input_switch:
+      name: Switch or Button or Trigger or Something..
+      selector:
+        entity:
+          domain: binary_sensor
+    target_lights:
+      name: Light(s)
+      selector:
+        target:
+          entity:
+            domain: light
+
+# for shelly...
+# https://gist.github.com/hummer2k/96c923415f587358ea92d995fd614084
+
+trigger:
+  platform: state
+  entity_id: !input input_switch
+
+action:
+  - service: >
+      {% if trigger.to_state.state == "on" %}
+        light.turn_on
+      {% else %}
+        light.turn_off
+      {% endif %}
+    target: !input target_lights
