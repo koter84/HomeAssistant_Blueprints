@@ -1,0 +1,29 @@
+blueprint:
+  name: Lights Flasher
+  description: Flash a list of Lights
+  domain: automation
+  source_url: https://github.com/koter84/HomeAssistant_Blueprints/blob/main/lights_flasher.yaml
+  input:
+    # Create a variable for identifying the light to act upon
+    target_light:
+      name: Lights
+      description: This is the light (or lights) that will be flashed
+      # Use a selector, to pick the light(s)
+      selector:
+        target:
+          entity:
+            domain: light
+
+# Prevent the automation from running concurrently
+mode: single
+  
+# This section will take action on the lights, and turn them on
+action:
+  # A very simple structure of turning on the selected light(s)
+  - service: light.turn_on
+    target: !input target_light
+    # Set and pass the desired brightness
+    data_template:
+      brightness_pct: "{{ target_brightness | int }}"
+
+
